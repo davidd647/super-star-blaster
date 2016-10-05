@@ -1,0 +1,41 @@
+<!--
+
+	- Develop a complex staged game infrastructure
+	- Make the spaceship globby?
+	- Aspects of the game depend on web API
+		- Like... NASA API (with Mars pics?)
+	- Make it a SPA?
+	- Use OAuth to share in a special way on soc med?
+
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>super star blaster!</title>
+	<style>
+		#myCanvas{
+			background: lightblue;
+		}
+	</style>
+</head>
+<body>
+	<p>super star blaster!</p>
+
+
+	<canvas id="myCanvas" width="640" height="480">
+	</canvas>
+
+
+	<script>
+		var c = document.getElementById("myCanvas");
+		var ctx = c.getContext("2d");
+
+		ctx.beginPath();
+		ctx.arc(95,50,40,0,2*Math.PI);
+		ctx.stroke();
+
+	</script>
+</body>
+</html>
