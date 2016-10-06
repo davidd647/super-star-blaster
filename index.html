@@ -18,6 +18,9 @@
 		#myCanvas{
 			background: lightblue;
 		}
+		.key-up {
+		    opacity: 0.5;
+		}
 	</style>
 </head>
 <body>
@@ -27,15 +30,63 @@
 	<canvas id="myCanvas" width="640" height="480">
 	</canvas>
 
+	<div class="dev-tools">
+		<ul id="log">
+		    <li>List of keys:</li>
+		</ul>
+	</div>
 
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 	<script>
-		var c = document.getElementById("myCanvas");
-		var ctx = c.getContext("2d");
+		//set up graphics
+			var c = document.getElementById("myCanvas");
+			var ctx = c.getContext("2d");
 
-		ctx.beginPath();
-		ctx.arc(95,50,40,0,2*Math.PI);
-		ctx.stroke();
+			ctx.beginPath();
+			ctx.arc(95,50,40,0,2*Math.PI);
+			ctx.stroke();
 
+
+		//keylogger
+			var log = $('#log')[0],
+			    pressedKeys = [];
+
+			$(document.body).keydown(function (evt) {
+			    var li = pressedKeys[evt.keyCode];
+			    if (!li) {
+			        li = log.appendChild(document.createElement('li'));
+			        pressedKeys[evt.keyCode] = li;
+			    }
+			    $(li).text('Down: ' + evt.keyCode);
+			    $(li).removeClass('key-up');
+			});
+
+			$(document.body).keyup(function (evt) {
+			    var li = pressedKeys[evt.keyCode];
+			    if (!li) {
+			       li = log.appendChild(document.createElement('li'));
+			    }
+			    $(li).text('Up: ' + evt.keyCode);
+			    $(li).addClass('key-up');
+			});
+
+		//the loop
+			var period = 100; // ms
+			var endTime = 1000000000;  // ms
+			var counter = 0;
+			var sleepyAlert = setInterval(function(){
+				//react when keys are pressed
+			    if (pressedKeys[87]){
+			    	console.log(pressedKeys[87]);
+			    }
+			    if (pressedKeys[13]){
+			    	counter = endTime;
+			    }
+			    if(counter === endTime){
+			       clearInterval(sleepyAlert);
+			    }
+			    counter += period;
+			}, period);
 	</script>
 </body>
 </html>
