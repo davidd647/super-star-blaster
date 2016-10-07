@@ -38,36 +38,52 @@
 
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 	<script>
-		//set up graphics
+		//configure graphics processing
 			var c = document.getElementById("myCanvas");
 			var ctx = c.getContext("2d");
 
-			ctx.beginPath();
-			ctx.arc(95,50,40,0,2*Math.PI);
-			ctx.stroke();
+
+		//set up stuff to be animated
+			//arc variables
+				var arcX = 100;
+				var arcY = 50;
+			//draw arc itself
+				ctx.beginPath();
+				ctx.arc(arcX,arcY,40,0,2*Math.PI);
+				ctx.stroke();
 
 
-		//keylogger
-			var log = $('#log')[0],
-			    pressedKeys = [];
+		//keylogger visualization
+			//main var for keylogger visualization
+				var log = $('#log')[0], pressedKeys = [];
+			//main var for keylogger interaction
+				var keyIsDown = [];
+
 
 			$(document.body).keydown(function (evt) {
-			    var li = pressedKeys[evt.keyCode];
-			    if (!li) {
-			        li = log.appendChild(document.createElement('li'));
-			        pressedKeys[evt.keyCode] = li;
-			    }
-			    $(li).text('Down: ' + evt.keyCode);
-			    $(li).removeClass('key-up');
+			    //keylogger visualization
+				    var li = pressedKeys[evt.keyCode];
+				    if (!li) {
+				        li = log.appendChild(document.createElement('li'));
+				        pressedKeys[evt.keyCode] = li;
+				    }
+				    $(li).text('Down: ' + evt.keyCode);
+				    $(li).removeClass('key-up');
+				//keylogger interaction
+					var tempKey = evt.keyCode;
+					keyIsDown[tempKey] = true;
 			});
-
 			$(document.body).keyup(function (evt) {
-			    var li = pressedKeys[evt.keyCode];
-			    if (!li) {
-			       li = log.appendChild(document.createElement('li'));
-			    }
-			    $(li).text('Up: ' + evt.keyCode);
-			    $(li).addClass('key-up');
+				//keylogger visualization
+				    var li = pressedKeys[evt.keyCode];
+				    if (!li) {
+				       li = log.appendChild(document.createElement('li'));
+				    }
+				    $(li).text('Up: ' + evt.keyCode);
+				    $(li).addClass('key-up');
+				//keylogger interaction
+					var tempKey = evt.keyCode;
+					keyIsDown[evt.keyCode] = false;
 			});
 
 		//the loop
@@ -76,15 +92,26 @@
 			var counter = 0;
 			var sleepyAlert = setInterval(function(){
 				//react when keys are pressed
-			    if (pressedKeys[87]){
-			    	console.log(pressedKeys[87]);
+			    if (keyIsDown[65] === true){
+			    	arcX--;
 			    }
-			    if (pressedKeys[13]){
-			    	counter = endTime;
+			    if (keyIsDown[68] === true){
+			    	arcX++;
+			    }
+			    if (keyIsDown[87] === true){
+			    	arcY--;
+			    }
+			    if (keyIsDown[83]){
+			    	arcY++;
 			    }
 			    if(counter === endTime){
 			       clearInterval(sleepyAlert);
 			    }
+			    console.log("Coordinates: "+arcX+" "+arcY);
+
+			    ctx.arc(arcX,arcY,40,0,2*Math.PI);
+			    ctx.stroke();
+
 			    counter += period;
 			}, period);
 	</script>
