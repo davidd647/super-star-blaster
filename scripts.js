@@ -1,3 +1,4 @@
+function startGame(){
 //configure graphics processing
 	var c = document.getElementById("myCanvas");
 	var ctx = c.getContext("2d");
@@ -11,6 +12,9 @@
 		ctx.beginPath();
 		ctx.arc(arcX,arcY,40,0,2*Math.PI);
 		ctx.stroke();
+	//assign image variables
+		var banana = new Image();
+		banana.src = "img/banana.png";
 
 //dev tools 
 	//timelft visualization
@@ -81,6 +85,12 @@
 		ctx.beginPath();
 		ctx.arc(arcX,arcY,40,0,2*Math.PI);
 		ctx.stroke();
+		ctx.drawImage(banana, arcX, arcY);
 
     counter += period;
 	}, period);
+}
+
+$( document ).ready(function(){
+	startGame();
+});
