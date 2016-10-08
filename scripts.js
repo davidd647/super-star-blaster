@@ -1,20 +1,85 @@
-function startGame(){
-//configure graphics processing
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
+var Context = {
+	canvas : null,
+	context : null,
+	create: function(canvas_tag_id) {
+		this.canvas = document.getElementById(canvas_tag_id);
+		this.context = this.canvas.getContext('2d');
+		return this.context;
+	}
+}
 
+var Sprite = function(filename, is_pattern) {
+
+	//construct the object
+	this.image = null;
+	this.pattern = null;
+	this.TO_RADIANS = Math.PI/180;
+
+	if (filename != undefined && filename != "" && filename != null){
+		this.image = new Image();
+		this.image.src = filename;
+
+		if (is_pattern){
+			this.pattern = Context.context.createPattern(this.image, 'repeat');
+		} 
+	} else {
+		console.log("Unable to load sprite.");
+	}
+
+	this.draw = function(x, y, w, h){
+		//Pattern?
+		if (this.pattern != null){
+			Context.context.fillStyle = this.pattern;
+			Context.context.fillRect(x, y, w, h);
+		} else {
+			//image
+			if (w != undefined || h != undefined){
+				Context.context.drawImage(this.image, x, y, 
+										this.image.width,
+										this.image.height);
+			} else {
+				//stretches
+				Context.context.drawImage(this.image, x, y, w, h);
+			}
+
+		}
+	}
+	
+	this.rotate = function(x, y, angle){
+		Context.context.save();
+
+		Context.context.translate(x, y);
+		Context.context.rotate(angle * this.TO_RADIANS);
+
+		Context.context.drawImage(this.image,
+								-(this.image.width/2),
+								-(this.image.height/2));
+
+		Context.context.restore();
+	}
+
+}
+
+//this constructs a new Sprite!
+//var img = new Sprite("wall.png", false);
+
+function startGame(){
 
 //set up stuff to be animated
 	//arc variables
 		var arcX = 100;
 		var arcY = 50;
 	//draw arc itself
-		ctx.beginPath();
-		ctx.arc(arcX,arcY,40,0,2*Math.PI);
-		ctx.stroke();
+		Context.context.beginPath();
+		Context.context.arc(arcX,arcY,40,0,2*Math.PI);
+		Context.context.stroke();
 	//assign image variables
-		var banana = new Image();
-		banana.src = "img/banana.png";
+		var BANANA = "img/banana.png";
+		var banana = new Sprite(BANANA, false);
+		var bananaDeg = 0;
+
+		// var banana = new Image();
+		// banana.src = "img/banana.png";
 
 //dev tools 
 	//timelft visualization
@@ -55,16 +120,18 @@ function startGame(){
 		});
 
 //the loop
-	var period = 100; // ms
-	var endTime = 10000;  // 10,000ms
+	var period = 30; // ms
+	var endTime = 30000;  // 10,000ms
 	var counter = 0;
 	var sleepyAlert = setInterval(function(){
 	//react when keys are pressed
 		if (keyIsDown[65] === true){
 			arcX-=3;
+			bananaDeg -= 3;
 		}
 		if (keyIsDown[68] === true){
 			arcX+=3;
+			bananaDeg += 3;
 		}
 		if (keyIsDown[87] === true){
 			arcY-=3;
@@ -79,18 +146,26 @@ function startGame(){
 	timeDisplay.html((counter / 100) + ' of ' + (endTime / 100) + 'ms have elapsed.');
 
     //clear the screen
-    	ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+    	Context.context.clearRect(0, 0, myCanvas.width, myCanvas.height);
+    	//I wonder what's faster...
+    	//should I just fill in the canvas rect with a colour like this? 
+    		//Context.context.fillStyle = "#000000";
+    		//Context.context.fillRect(0,0,myCanvas.width, myCanvas.height);
     	
 	//draw
-		ctx.beginPath();
-		ctx.arc(arcX,arcY,40,0,2*Math.PI);
-		ctx.stroke();
-		ctx.drawImage(banana, arcX, arcY);
+		Context.context.beginPath();
+		Context.context.arc(arcX,arcY,40,0,2*Math.PI);
+		Context.context.stroke();
+		// Context.context.drawImage(banana, arcX, arcY);
+		banana.rotate(arcX, arcY, bananaDeg);
 
     counter += period;
 	}, period);
 }
 
 $( document ).ready(function(){
+	//initialize canvas
+		Context.create("myCanvas");
+
 	startGame();
 });
