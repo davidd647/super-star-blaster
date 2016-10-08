@@ -62,25 +62,25 @@
 
 			$(document.body).keydown(function (evt) {
 			    //keylogger visualization
-				    var li = pressedKeys[evt.keyCode];
-				    if (!li) {
-				        li = log.appendChild(document.createElement('li'));
-				        pressedKeys[evt.keyCode] = li;
-				    }
-				    $(li).text('Down: ' + evt.keyCode);
-				    $(li).removeClass('key-up');
+					var li = pressedKeys[evt.keyCode];
+					if (!li) {
+					    li = log.appendChild(document.createElement('li'));
+					    pressedKeys[evt.keyCode] = li;
+					}
+					$(li).text('Down: ' + evt.keyCode);
+					$(li).removeClass('key-up');
 				//keylogger interaction
 					var tempKey = evt.keyCode;
 					keyIsDown[tempKey] = true;
 			});
 			$(document.body).keyup(function (evt) {
 				//keylogger visualization
-				    var li = pressedKeys[evt.keyCode];
-				    if (!li) {
-				       li = log.appendChild(document.createElement('li'));
-				    }
-				    $(li).text('Up: ' + evt.keyCode);
-				    $(li).addClass('key-up');
+					var li = pressedKeys[evt.keyCode];
+					if (!li) {
+					   li = log.appendChild(document.createElement('li'));
+					}
+					$(li).text('Up: ' + evt.keyCode);
+					$(li).addClass('key-up');
 				//keylogger interaction
 					var tempKey = evt.keyCode;
 					keyIsDown[evt.keyCode] = false;
@@ -88,31 +88,36 @@
 
 		//the loop
 			var period = 100; // ms
-			var endTime = 1000000000;  // ms
+			var endTime = 1000;  // ms
 			var counter = 0;
 			var sleepyAlert = setInterval(function(){
-				//react when keys are pressed
-			    if (keyIsDown[65] === true){
-			    	arcX--;
-			    }
-			    if (keyIsDown[68] === true){
-			    	arcX++;
-			    }
-			    if (keyIsDown[87] === true){
-			    	arcY--;
-			    }
-			    if (keyIsDown[83]){
-			    	arcY++;
-			    }
-			    if(counter === endTime){
-			       clearInterval(sleepyAlert);
-			    }
-			    console.log("Coordinates: "+arcX+" "+arcY);
+			//react when keys are pressed
+				if (keyIsDown[65] === true){
+					arcX-=3;
+				}
+				if (keyIsDown[68] === true){
+					arcX+=3;
+				}
+				if (keyIsDown[87] === true){
+					arcY-=3;
+				}
+				if (keyIsDown[83]){
+					arcY+=3;
+				}
+				if(counter === endTime){
+				   clearInterval(sleepyAlert);
+				}
+			
+			console.log("Coordinates: "+arcX+" "+arcY);
 
-			    ctx.arc(arcX,arcY,40,0,2*Math.PI);
-			    ctx.stroke();
+		    //clear the screen
+		    	ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+			//draw
+				ctx.beginPath();
+				ctx.arc(arcX,arcY,40,0,2*Math.PI);
+				ctx.stroke();
 
-			    counter += period;
+		    counter += period;
 			}, period);
 	</script>
 </body>
