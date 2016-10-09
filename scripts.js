@@ -82,6 +82,7 @@ function startGame(){
 		Context.context.beginPath();
 		Context.context.arc(arcX,arcY,40,0,2*Math.PI);
 		Context.context.stroke();
+
 	//assign image variables
 		var banana = new Sprite(bananaObj.src, false);
 
@@ -132,9 +133,9 @@ function startGame(){
 		if (keyIsDown[87] === true){
 			//this is the 'up' key, so change the way we're moving
 			//deg, current motion X and current motion Y
-			arcX += Math.sin((bananaObj.deg / 180) * 10);
-			console.log(Math.sin((bananaObj.deg / 180) * 10));
-			arcY -= Math.cos((bananaObj.deg / 180) * 10);
+			arcX += Math.sin(bananaObj.deg / 180) * 10;
+			arcY -= Math.cos(bananaObj.deg / 180) * 10;
+			console.log(arcX, arcY);
 			
 		}
 		if (keyIsDown[65] === true){
@@ -158,11 +159,18 @@ function startGame(){
     	
 	//draw
 		Context.context.beginPath();
-		Context.context.arc(arcX,arcY,40,0,1.9*Math.PI);
+		Context.context.arc(arcX,arcY,40,0,2*Math.PI);
 		Context.context.stroke();
 		// Context.context.drawImage(banana, arcX, arcY);
 		banana.rotate(arcX, arcY, bananaObj.deg);
 
+		Context.context.beginPath();
+		Context.context.moveTo(arcX, arcY);
+		Context.context.lineTo(
+				arcX + Math.sin(bananaObj.deg / 180) * 10, 
+				arcY + Math.cos(bananaObj.deg / 180) * 10 );
+		Context.context.strokeStyle="red";
+		Context.context.stroke();
     counter += period;
 	}, period);
 }
