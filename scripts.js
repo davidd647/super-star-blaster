@@ -72,6 +72,16 @@ var bananaObj = {
 //this constructs a new Sprite!
 //var img = new Sprite("wall.png", false);
 
+function whereAmIGoing(arcX, arcY){
+	Context.context.beginPath();
+	Context.context.moveTo(arcX, arcY);
+	Context.context.lineTo(
+			arcX + Math.sin(bananaObj.deg / 180) * 10, 
+			arcY + Math.cos(bananaObj.deg / 180) * 10 );
+	Context.context.strokeStyle="red";
+	Context.context.stroke();
+}
+
 function startGame(){
 
 //set up stuff to be animated
@@ -164,13 +174,9 @@ function startGame(){
 		// Context.context.drawImage(banana, arcX, arcY);
 		banana.rotate(arcX, arcY, bananaObj.deg);
 
-		Context.context.beginPath();
-		Context.context.moveTo(arcX, arcY);
-		Context.context.lineTo(
-				arcX + Math.sin(bananaObj.deg / 180) * 10, 
-				arcY + Math.cos(bananaObj.deg / 180) * 10 );
-		Context.context.strokeStyle="red";
-		Context.context.stroke();
+	//game directional indicator (gamedev tool)
+		whereAmIGoing(arcX, arcY);
+
     counter += period;
 	}, period);
 }
