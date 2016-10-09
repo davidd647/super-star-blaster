@@ -143,8 +143,8 @@ function startGame(){
 		if (keyIsDown[87] === true){
 			//this is the 'up' key, so change the way we're moving
 			//deg, current motion X and current motion Y
-			arcX += Math.sin(bananaObj.deg / 180) * 10;
-			arcY -= Math.cos(bananaObj.deg / 180) * 10;
+			arcX = arcX + Math.sin(bananaObj.deg / 180) * 10;
+			arcY = arcY + Math.cos(bananaObj.deg / 180) * 10;
 			console.log(arcX, arcY);
 			
 		}
