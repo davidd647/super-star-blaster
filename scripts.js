@@ -60,6 +60,15 @@ var Sprite = function(filename, is_pattern) {
 
 }
 
+
+var bananaObj = {
+	src : "img/banana.png",
+	deg : 0,
+	accel : 1, //1 px per frame per frame
+	moveX : 0,
+	moveY : 0
+}
+
 //this constructs a new Sprite!
 //var img = new Sprite("wall.png", false);
 
@@ -74,12 +83,7 @@ function startGame(){
 		Context.context.arc(arcX,arcY,40,0,2*Math.PI);
 		Context.context.stroke();
 	//assign image variables
-		var BANANA = "img/banana.png";
-		var banana = new Sprite(BANANA, false);
-		var bananaDeg = 0;
-
-		// var banana = new Image();
-		// banana.src = "img/banana.png";
+		var banana = new Sprite(bananaObj.src, false);
 
 //dev tools 
 	//timelft visualization
@@ -125,19 +129,19 @@ function startGame(){
 	var counter = 0;
 	var sleepyAlert = setInterval(function(){
 	//react when keys are pressed
+		if (keyIsDown[87] === true){
+			//this is the 'up' key, so change the way we're moving
+			//deg, current motion X and current motion Y
+			arcX += Math.sin((bananaObj.deg / 180) * 10);
+			console.log(Math.sin((bananaObj.deg / 180) * 10));
+			arcY -= Math.cos((bananaObj.deg / 180) * 10);
+			
+		}
 		if (keyIsDown[65] === true){
-			arcX-=3;
-			bananaDeg -= 3;
+			bananaObj.deg -= 3;
 		}
 		if (keyIsDown[68] === true){
-			arcX+=3;
-			bananaDeg += 3;
-		}
-		if (keyIsDown[87] === true){
-			arcY-=3;
-		}
-		if (keyIsDown[83]){
-			arcY+=3;
+			bananaObj.deg += 3;
 		}
 		if(counter === endTime){
 		   clearInterval(sleepyAlert);
@@ -154,10 +158,10 @@ function startGame(){
     	
 	//draw
 		Context.context.beginPath();
-		Context.context.arc(arcX,arcY,40,0,2*Math.PI);
+		Context.context.arc(arcX,arcY,40,0,1.9*Math.PI);
 		Context.context.stroke();
 		// Context.context.drawImage(banana, arcX, arcY);
-		banana.rotate(arcX, arcY, bananaDeg);
+		banana.rotate(arcX, arcY, bananaObj.deg);
 
     counter += period;
 	}, period);
