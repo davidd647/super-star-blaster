@@ -1,3 +1,5 @@
+var CONST_TO_RADIANS = Math.PI / 180;
+
 var Context = {
 	canvas : null,
 	context : null,
@@ -61,26 +63,10 @@ var Sprite = function(filename, is_pattern) {
 }
 
 
-var bananaObj = {
-	src : "img/banana.png",
-	deg : 0,
-	accel : 1, //1 px per frame per frame
-	moveX : 0,
-	moveY : 0
-}
+
 
 //this constructs a new Sprite!
 //var img = new Sprite("wall.png", false);
-
-function whereAmIGoing(arcX, arcY){
-	Context.context.beginPath();
-	Context.context.moveTo(arcX, arcY);
-	Context.context.lineTo(
-			arcX + Math.sin(bananaObj.deg / 180) * 10, 
-			arcY + Math.cos(bananaObj.deg / 180) * 10 );
-	Context.context.strokeStyle="red";
-	Context.context.stroke();
-}
 
 function startGame(){
 
@@ -94,9 +80,26 @@ function startGame(){
 		Context.context.stroke();
 
 	//assign image variables
+		var bananaObj = {
+			src : "img/banana.png",
+			accel : 1,
+			deg : 0,
+			moveX : 0,
+			moveY : 0
+		}
 		var banana = new Sprite(bananaObj.src, false);
 
-//dev tools 
+		function whereAmIGoing(arcX, arcY){
+			Context.context.beginPath();
+			Context.context.moveTo(arcX, arcY);
+			Context.context.lineTo(
+					arcX + Math.floor(Math.sin(bananaObj.deg * CONST_TO_RADIANS) * 10), 
+					arcY - Math.floor(Math.cos(bananaObj.deg * CONST_TO_RADIANS) * 10)
+					);
+			Context.context.strokeStyle="red";
+			Context.context.stroke();
+		}
+//dev tools and keylogger
 	//timelft visualization
 		//main var for display
 			var timeDisplay = $('#time-left');
@@ -138,46 +141,49 @@ function startGame(){
 	var period = 30; // ms
 	var endTime = 30000;  // 10,000ms
 	var counter = 0;
+
 	var sleepyAlert = setInterval(function(){
-	//react when keys are pressed
-		if (keyIsDown[87] === true){
-			//this is the 'up' key, so change the way we're moving
-			//deg, current motion X and current motion Y
-			arcX = arcX + Math.sin(bananaObj.deg / 180) * 10;
-			arcY = arcY + Math.cos(bananaObj.deg / 180) * 10;
-			console.log(arcX, arcY);
-			
-		}
-		if (keyIsDown[65] === true){
-			bananaObj.deg -= 3;
-		}
-		if (keyIsDown[68] === true){
-			bananaObj.deg += 3;
-		}
-		if(counter === endTime){
-		   clearInterval(sleepyAlert);
-		}
-	
-	timeDisplay.html((counter / 100) + ' of ' + (endTime / 100) + 'ms have elapsed.');
+		//react when keys are pressed
+			if (keyIsDown[87] === true){
+				//this is the 'up' key, so change the way we're moving
+				//deg, current motion X and current motion Y
+				arcX = arcX + Math.floor(Math.sin(bananaObj.deg * CONST_TO_RADIANS) * 10);
+				arcY = arcY - Math.floor(Math.cos(bananaObj.deg * CONST_TO_RADIANS) * 10);
+				console.log(arcX, arcY);
+				
+			}
+			if (keyIsDown[65] === true){
+				bananaObj.deg -= 3;
+				console.log('Rotation: ' + bananaObj.deg + 'deg');
+			}
+			if (keyIsDown[68] === true){
+				bananaObj.deg += 3;
+				console.log('Rotation: ' + bananaObj.deg + 'deg');
+			}
+			if(counter === endTime){
+			   clearInterval(sleepyAlert);
+			}
+		
+		timeDisplay.html(Math.floor((counter / 100)) + ' of ' + (endTime / 100) + 'ms have elapsed.');
 
-    //clear the screen
-    	Context.context.clearRect(0, 0, myCanvas.width, myCanvas.height);
-    	//I wonder what's faster...
-    	//should I just fill in the canvas rect with a colour like this? 
-    		//Context.context.fillStyle = "#000000";
-    		//Context.context.fillRect(0,0,myCanvas.width, myCanvas.height);
-    	
-	//draw
-		Context.context.beginPath();
-		Context.context.arc(arcX,arcY,40,0,2*Math.PI);
-		Context.context.stroke();
-		// Context.context.drawImage(banana, arcX, arcY);
-		banana.rotate(arcX, arcY, bananaObj.deg);
+	    //clear the screen
+	    	Context.context.clearRect(0, 0, myCanvas.width, myCanvas.height);
+	    	//I wonder what's faster...
+	    	//should I just fill in the canvas rect with a colour like this? 
+	    		//Context.context.fillStyle = "#000000";
+	    		//Context.context.fillRect(0,0,myCanvas.width, myCanvas.height);
+	    	
+		//draw
+			Context.context.beginPath();
+			Context.context.arc(arcX,arcY,40,0,2*Math.PI);
+			Context.context.stroke();
+			// Context.context.drawImage(banana, arcX, arcY);
+			banana.rotate(arcX, arcY, bananaObj.deg);
 
-	//game directional indicator (gamedev tool)
-		whereAmIGoing(arcX, arcY);
+		//game directional indicator (gamedev tool)
+			whereAmIGoing(arcX, arcY);
 
-    counter += period;
+		counter += period;
 	}, period);
 }
 
