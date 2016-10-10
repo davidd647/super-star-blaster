@@ -82,10 +82,13 @@ function startGame(){
 	//assign image variables
 		var bananaObj = {
 			src : "img/banana.png",
-			accel : 1,
-			deg : 0,
-			moveX : 0,
-			moveY : 0
+			accel : 0.001,
+			speedHyp : 0.1,
+			speedX : 1,
+			speedY : 0,
+			posX : 100,
+			posY : 100,
+			deg : 0
 		}
 		var banana = new Sprite(bananaObj.src, false);
 
@@ -147,11 +150,26 @@ function startGame(){
 			if (keyIsDown[87] === true){
 				//this is the 'up' key, so change the way we're moving
 				//deg, current motion X and current motion Y
-				arcX = arcX + Math.floor(Math.sin(bananaObj.deg * CONST_TO_RADIANS) * 10);
-				arcY = arcY - Math.floor(Math.cos(bananaObj.deg * CONST_TO_RADIANS) * 10);
-				console.log(arcX, arcY);
+				bananaObj.speedHyp = bananaObj.speedHyp + bananaObj.accel;
+
+				var playerRads = bananaObj.deg * CONST_TO_RADIANS;
+
+				bananaObj.speedX = bananaObj.speedX + Math.sin(playerRads) * bananaObj.speedHyp;
+				bananaObj.speedY = bananaObj.speedY - Math.cos(playerRads) * bananaObj.speedHyp;
+
+				console.log("bananaObj.speedHyp: " + bananaObj.speedHyp);
+				console.log("bananaObj.speedX: " + bananaObj.speedX);
+				// arcX = arcX + Math.floor(Math.sin(bananaObj.deg * CONST_TO_RADIANS) * 10);
+				// arcY = arcY - Math.floor(Math.cos(bananaObj.deg * CONST_TO_RADIANS) * 10);
+				// console.log(arcX, arcY);
 				
 			}
+			var moveShipX = bananaObj.speedX;
+			var moveShipY = bananaObj.speedY;
+
+			bananaObj.posX += moveShipX;
+			bananaObj.posY += moveShipY;
+
 			if (keyIsDown[65] === true){
 				bananaObj.deg -= 3;
 				console.log('Rotation: ' + bananaObj.deg + 'deg');
@@ -178,7 +196,7 @@ function startGame(){
 			Context.context.arc(arcX,arcY,40,0,2*Math.PI);
 			Context.context.stroke();
 			// Context.context.drawImage(banana, arcX, arcY);
-			banana.rotate(arcX, arcY, bananaObj.deg);
+			banana.rotate(bananaObj.posX, bananaObj.posY, bananaObj.deg);
 
 		//game directional indicator (gamedev tool)
 			whereAmIGoing(arcX, arcY);
