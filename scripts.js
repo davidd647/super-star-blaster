@@ -150,12 +150,25 @@ function startGame(){
 			if (keyIsDown[87] === true){
 				//this is the 'up' key, so change the way we're moving
 				//deg, current motion X and current motion Y
-				bananaObj.speedHyp = bananaObj.speedHyp + bananaObj.accel;
+				//bananaObj.speedHyp = bananaObj.speedHyp + bananaObj.accel;
 
 				var playerRads = bananaObj.deg * CONST_TO_RADIANS;
 
-				bananaObj.speedX = bananaObj.speedX + Math.sin(playerRads) * bananaObj.speedHyp;
-				bananaObj.speedY = bananaObj.speedY - Math.cos(playerRads) * bananaObj.speedHyp;
+				//check if the hypoteneus is greater than 5
+				if ((Math.abs(bananaObj.speedX) + Math.abs(bananaObj.speedY) > 2) && (
+					(Math.abs(bananaObj.speedX) + Math.abs(bananaObj.speedY)) <=
+						(
+							Math.abs(bananaObj.speedX + Math.sin(playerRads) * bananaObj.speedHyp) +
+							Math.abs(bananaObj.speedY - Math.cos(playerRads) * bananaObj.speedHyp)
+						)
+					))
+					{
+					//then don't add any speed to the banana
+
+				} else {
+					bananaObj.speedX = bananaObj.speedX + Math.sin(playerRads) * bananaObj.speedHyp;
+					bananaObj.speedY = bananaObj.speedY - Math.cos(playerRads) * bananaObj.speedHyp;
+				}
 
 				console.log("bananaObj.speedHyp: " + bananaObj.speedHyp);
 				console.log("bananaObj.speedX: " + bananaObj.speedX);
@@ -195,6 +208,18 @@ function startGame(){
 			Context.context.beginPath();
 			Context.context.arc(arcX,arcY,40,0,2*Math.PI);
 			Context.context.stroke();
+
+			//make sure the player stays on the page
+			if (bananaObj.posX > myCanvas.width){
+				bananaObj.posX = 0;
+			} else if (bananaObj.posX < 0){
+				bananaObj.posX = myCanvas.width;
+			}
+			if (bananaObj.posY > myCanvas.height){
+				bananaObj.posY = 0;
+			} else if (bananaObj.posY < 0){
+				bananaObj.posY = myCanvas.height;
+			}
 			// Context.context.drawImage(banana, arcX, arcY);
 			banana.rotate(bananaObj.posX, bananaObj.posY, bananaObj.deg);
 
