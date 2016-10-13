@@ -80,6 +80,14 @@ function startGame(){
 		Context.context.stroke();
 
 	//assign image variables
+		var bgImageObj = {
+			src : "img/bg.jpg",
+			posX : 0,
+			posY : 0
+		}
+		var bgImage = new Sprite(bgImageObj.src, true);
+
+		//main character
 		var bananaObj = {
 			src : "img/banana.png",
 			accel : 0.001,
@@ -155,7 +163,7 @@ function startGame(){
 				var playerRads = bananaObj.deg * CONST_TO_RADIANS;
 
 				//check if the hypoteneus is greater than 5
-				if ((Math.abs(bananaObj.speedX) + Math.abs(bananaObj.speedY) > 2) && (
+				if ((Math.abs(bananaObj.speedX) + Math.abs(bananaObj.speedY) > 5) && (
 					(Math.abs(bananaObj.speedX) + Math.abs(bananaObj.speedY)) <=
 						(
 							Math.abs(bananaObj.speedX + Math.sin(playerRads) * bananaObj.speedHyp) +
@@ -205,6 +213,10 @@ function startGame(){
 	    		//Context.context.fillRect(0,0,myCanvas.width, myCanvas.height);
 	    	
 		//draw
+			//background
+			bgImage.draw(0, 0, myCanvas.width, myCanvas.height);
+
+			//an arc
 			Context.context.beginPath();
 			Context.context.arc(arcX,arcY,40,0,2*Math.PI);
 			Context.context.stroke();
