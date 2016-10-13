@@ -81,7 +81,7 @@ function startGame(){
 
 	//assign image variables
 		var bgImageObj = {
-			src : "img/bg.jpg",
+			src : "img/bg.png",
 			posX : 0,
 			posY : 0
 		}
@@ -162,15 +162,12 @@ function startGame(){
 
 				var playerRads = bananaObj.deg * CONST_TO_RADIANS;
 
-				//check if the hypoteneus is greater than 5
-				if ((Math.abs(bananaObj.speedX) + Math.abs(bananaObj.speedY) > 5) && (
-					(Math.abs(bananaObj.speedX) + Math.abs(bananaObj.speedY)) <=
-						(
-							Math.abs(bananaObj.speedX + Math.sin(playerRads) * bananaObj.speedHyp) +
-							Math.abs(bananaObj.speedY - Math.cos(playerRads) * bananaObj.speedHyp)
-						)
-					))
-					{
+				//check if the future hypoteneus (or speed in one frame) will be greater than five
+				if ((
+						Math.abs(bananaObj.speedX + Math.sin(playerRads) * bananaObj.speedHyp) +
+						Math.abs(bananaObj.speedY - Math.cos(playerRads) * bananaObj.speedHyp)
+					) > 5)
+				{
 					//then don't add any speed to the banana
 
 				} else {
